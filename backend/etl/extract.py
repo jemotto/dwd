@@ -100,4 +100,6 @@ with io.open(tmp(DWD_STATIONS), mode='r', encoding=enc) as stations_file:
             log.debug("ommitting nonpublished id5: " + id5)
         line = stations_file.readline()
 db.session.commit()
-log.info('deleting main stations file')
+log.info('deleting main stations file and the directory listing')
+os.remove(tmp(DWD_STATIONS))
+os.remove(tmp("ls"))

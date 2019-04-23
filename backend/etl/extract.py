@@ -94,7 +94,7 @@ with io.open(tmp(DWD_STATIONS), mode='r', encoding=enc) as stations_file:
             progress_count += 1
             if progress_count % 50 == 0:
                 log.info(str(progress_count) + ' files extracted')
-                # break
+                break
         else:
             log.debug("ommitting nonpublished id5: " + id5)
         line = stations_file.readline()

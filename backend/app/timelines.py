@@ -1,7 +1,10 @@
+import os
+
+from flask import Flask, Response, json
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, Response, json
 
+from init_db import init_db
 from settings import DB_STRING
 
 app = Flask(__name__)
@@ -10,6 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_STRING
 db = SQLAlchemy(app)
+
 CORS(app)
 
 
@@ -33,7 +37,7 @@ class Station(db.Model):
 class Measurement(db.Model):
     __tablename__ = 'measurements'
     id = db.Column(db.Integer, primary_key=True)
-    station_id = db.Column(db.String, db.ForeignKey('stations.id5'), nullable=False)
+    station_id = db.Column(db.String(5), db.ForeignKey('stations.id5'), nullable=False)
     date = db.Column(db.Date, nullable=False)
     station = db.relationship("Station", backref="stations")
     QN_3 = db.Column(db.Float)
@@ -55,6 +59,9 @@ class Measurement(db.Model):
 
     def __repr__(self):
         return '<Measurement %r %r>' % (self.station_id, self.date)
+
+
+init_db(db, app)
 
 
 @app.route('/api/stations', methods=['GET'])
@@ -80,4 +87,4 @@ def fetch_measurements(station_id, variable_name):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, host="0.0.0.0", port=os.environ['PORT'])

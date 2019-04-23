@@ -1,6 +1,8 @@
 $(function () {
 	'use strict';
 
+    const API_SERVER='http://{{BACKEND_HOSTNAME}}:{{BACKEND_PORT}}'
+
     var Selection = Backbone.Model.extend({
       defaults: {
         variable: undefined,
@@ -54,10 +56,6 @@ $(function () {
             </div>
          `
     })
-
-
-
-    const API_SERVER='http://127.0.0.1:5001'
 
     var Station = Backbone.Model.extend({
       url: API_SERVER + '/api/stations',

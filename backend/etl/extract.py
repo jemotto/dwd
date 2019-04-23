@@ -7,12 +7,11 @@ from datetime import datetime
 from string import join
 from zipfile import ZipFile
 
-# from backend.app.settings import DB_FILE
 from encoding import determine_encoding
 from settings import *
-from backend.app.timelines import db, Station, Measurement
+from ..app.timelines import db, Station, Measurement
 
-logging.config.fileConfig('backend/etl/logging.conf')
+logging.config.fileConfig('app/etl/logging.conf')
 log = logging.getLogger('extract')
 
 # drop database and start over
@@ -40,7 +39,6 @@ with io.open(tmp('ls'), mode='r', encoding=enc) as ls_file:
         if re.match(r'.*\.zip$', line):
             published_id5s.add(line.split()[-1][14:19])
         line = ls_file.readline()
-
 
 # takes about 6min
 log.info('pulling data per each id5 when file was published')
@@ -96,6 +94,7 @@ with io.open(tmp(DWD_STATIONS), mode='r', encoding=enc) as stations_file:
             progress_count += 1
             if progress_count % 50 == 0:
                 log.info(str(progress_count) + ' files extracted')
+                # break
         else:
             log.debug("ommitting nonpublished id5: " + id5)
         line = stations_file.readline()

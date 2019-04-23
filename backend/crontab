@@ -1,0 +1,1 @@
+7 1 * * * cd / && /usr/local/bin/python -m app.etl.extract > /var/log/extract

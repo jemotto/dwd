@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: frontend/
+      args:
+        BACKEND_HOSTNAME: ${BACKEND_HOSTNAME}
+        BACKEND_PORT: ${BACKEND_PORT}
+    container_name: fe
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    links:
+      - backend
+    environment:
+      PORT: ${FRONTEND_PORT}
+  backend:
+    build:
+      context: backend/
+    container_name: be
+    ports:
+     - "${BACKEND_PORT}:${BACKEND_PORT}"
+    links:
+     - mysql
+    environment:
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      PORT: ${BACKEND_PORT}
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.6
+    container_name: mysql
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
